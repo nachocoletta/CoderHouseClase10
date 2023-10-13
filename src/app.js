@@ -3,7 +3,9 @@ import path from 'path';
 import morgan from 'morgan';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import indexRouter from './routers/index.router.js';
+import productRouterInRealTime from './routers/product.router.js';
+import productsRouter from './routers/products.router.js'
+import handlebars from 'express-handlebars';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,7 +26,13 @@ app.use(morgan('dev'));
 const publicDir = path.join(utilsDir, '../public');
 app.use(express.static(publicDir));
 
-app.use('/', indexRouter);
+app.engine('handlebars', handlebars.engine());
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'handlebars');
+
+app.use('/api/products', productsRouter)
+app.use('/api/realtimeproducts', productRouterInRealTime);
+
 
 app.use((error, req, res, next) => {
   const message = `😨 Ah ocurrido un error desconocido: ${error.message}`;
