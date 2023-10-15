@@ -26,6 +26,7 @@ router.post('/', async (req, res) => {
         stock,
         category,
         thumbnails } = req.body
+
     try {
         if (!(title && description && code && price
             && stock && category)) {

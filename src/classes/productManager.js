@@ -7,9 +7,11 @@ export class ProductManager {
     this.path = path;
   }
   async addProduct({ title, description, code, price, status, stock, category, thumbnails }) {
+    // console.log('entra a la ruta')
     if (!(title && description && price && thumbnails && code && stock)) {
-      console.log(`Some data is missing, please check your input`);
-      return;
+      throw new Error(`Some data is missing, please check your input`);
+      // console.log(`Some data is missing, please check your input`);
+      // return;
     }
     try {
       const products = await getJSONFromFile(this.path);

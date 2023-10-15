@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import productRouterInRealTime from './routers/product.router.js';
 import productsRouter from './routers/products.router.js'
+import indexRouter from './routers/index.router.js'
 import handlebars from 'express-handlebars';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -30,6 +31,7 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
 
+app.use('/', indexRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/realtimeproducts', productRouterInRealTime);
 
