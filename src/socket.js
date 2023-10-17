@@ -21,50 +21,27 @@ export const init = (httpServer) => {
 
     io.on('connection', async (socketClient) => {
         console.log(`Se ha conectado un nuevo cliente 🎉 (${socketClient.id})`);
+
         const products = await productManager.getProducts();
-        socketClient.emit('notification', { products });
+        socketClient.emit('listProducts', products);
 
-        socketClient.on('new-product', (data) => {
-            io.emit('notification-in-real-time', { data });
-        });
-        socketClient.on('delete-product', (data) => {
-            // console.log('entra')
-            io.emit('notification-in-real-time', data);
-        });
-
-        socketClient.on('update-product', (data) => {
-            io.emit('notification-in-real-time', data);
+        socketClient.on('addProduct', async (newProduct) => {
+            await productManager.addProduct(newProduct)
+            let products = await productManager.getProducts()
+            io.emit('listProducts', products)
         })
-        // socketClient.emit('notification-in-real-time', { products })
-    });
 
-    // io.on('new-product', (data) => {
-    //     io.emit('notification-in-real-time', { data });
-    // });
-    // io.on('delete-product', (data) => {
-    //     console.log('entra')
-    //     io.emit('notification-in-real-time', data);
-    // });
+        socketClient.on('deleteProduct', async (idProduct) => {
+            console.log("idProduct", idProduct)
+            await productManager.deleteProduct(idProduct)
+            let products = await productManager.getProducts()
+            io.emit('listProducts', products)
+        })
+        socketClient.on('disconnect', () => {
+            console.log(`Se ha desconectado el cliente con id ${socketClient.id}`)
+        })
+    });
     console.log('Server socket running 🚀');
 }
 
 export const emitFromApi = (event, data) => io.emit(event, data);
-
-// export const handleSocketConnection = (socket, productManager) => {
-//     socket.on('new-product', async (data) => {
-//         await productManager.addProduct({
-//             title: data.title,
-//             description: data.description,
-//             code: data.code,
-//             price: data.price,
-//             stock: data.stock,
-//             category: data.category,
-//             thumbnails: []
-//         });
-
-//         const updatedProducts = await productManager.getProducts();
-
-//         // io.emit('notification', { products: updatedProducts });
-//         io.emit('notification-in-real-time', { products: updatedProducts });
-//     });
-// };

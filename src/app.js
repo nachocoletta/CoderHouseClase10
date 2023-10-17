@@ -19,6 +19,14 @@ const utilsDir = path.join(srcDir, 'utils');
 
 const app = express();
 
+
+console.log('Aplicación de Express creada');
+// app.use((req, res, next) => {
+//   console.log('Middleware de registro simple');
+//   console.log(`Solicitud recibida: ${req.method} ${req.url}`);
+//   next();
+// });
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
@@ -33,7 +41,7 @@ app.set('view engine', 'handlebars');
 
 app.use('/', indexRouter)
 app.use('/api/products', productsRouter)
-app.use('/api/realtimeproducts', productRouterInRealTime);
+app.use('/realtimeproducts', productRouterInRealTime);
 
 
 app.use((error, req, res, next) => {
