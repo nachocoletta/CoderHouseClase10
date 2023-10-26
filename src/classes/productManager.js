@@ -39,11 +39,12 @@ export class ProductManager {
         // console.log(error)
         return error;
       }
-    } catch {
+    } catch (error) {
       // console.log(`The code ${findedCode.code} already exists`);
-      throw new Error(`Something is wrong`);
+      throw new Error(`Something is wrong ${error.message}`);
     }
   }
+
   async getProducts() {
     return getJSONFromFile(this.path);
   }
